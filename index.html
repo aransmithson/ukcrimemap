@@ -1084,7 +1084,7 @@ function renderCrimes(crimes) {
     var outcome = (crime.outcome_status && crime.outcome_status.category) || 'Under investigation';
 
     L.circleMarker([lat, lng], {
-      radius: 5, fillColor: color, color: color, weight: 0, fillOpacity: 0.75
+      radius: 8, fillColor: color, color: color, weight: 0, fillOpacity: 0.7
     })
     .bindPopup(
       '<div class="popup-cat">' + catLabel(crime.category) + '</div>' +
