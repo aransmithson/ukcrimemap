@@ -410,6 +410,8 @@
 
   .leaflet-container { background: var(--map-bg) !important; }
   .leaflet-tile-pane { filter: var(--tile-filter); transition: filter 0.3s; }
+  .leaflet-interactive { cursor: pointer !important; pointer-events: auto !important; }
+  .leaflet-overlay-pane svg path { pointer-events: all !important; }
 
   .leaflet-popup-content-wrapper {
     background: var(--surface) !important;
@@ -820,7 +822,7 @@ function toggleTheme() {
 }
 
 // ── MAP ───────────────────────────────────────────────────────────────────────
-const map = L.map('map', { center: [54.5, -3], zoom: 5 });
+const map = L.map('map', { center: [54.5, -3], zoom: 5, tapTolerance: 20 });
 
 darkTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
   attribution: '\u00a9 <a href="https://carto.com/">CARTO</a>',
@@ -1092,7 +1094,7 @@ function renderCrimes(crimes) {
     var outcome = (crime.outcome_status && crime.outcome_status.category) || 'Under investigation';
 
     L.circleMarker([lat, lng], {
-      radius: 8, fillColor: color, color: color, weight: 0, fillOpacity: 0.7
+      radius: 8, fillColor: color, color: color, weight: 14, opacity: 0, fillOpacity: 0.7
     })
     .bindPopup(
       '<div class="popup-cat">' + catLabel(crime.category) + '</div>' +
