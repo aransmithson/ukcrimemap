@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -8,13 +8,62 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
+  [data-theme="dark"] {
     --bg: #0a0c0f;
     --surface: #111418;
-    --border: #1e2530;
+    --border: #2a3140;
     --accent: #ff3b3b;
-    --text: #c8d0dc;
-    --text-dim: #4a5568;
+    --accent-hover: #cc2020;
+    --accent-bg: rgba(255,59,59,0.08);
+    --accent-border: rgba(255,59,59,0.25);
+    --accent-filter-bg: rgba(255,59,59,0.06);
+    --accent-filter-active: rgba(255,59,59,0.1);
+    --text: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --text-dim: #64748b;
+    --text-on-accent: #fff;
+    --btn-disabled-bg: #2a1010;
+    --btn-disabled-border: #3a1515;
+    --btn-disabled-text: #664444;
+    --item-hover: rgba(255,255,255,0.03);
+    --overlay-bg: rgba(0,0,0,0.75);
+    --modal-shadow: rgba(0,0,0,0.7);
+    --scrollbar-track: #0a0c0f;
+    --scrollbar-thumb: #2a3140;
+    --input-scheme: dark;
+    --map-bg: #0d1117;
+    --tile-filter: brightness(0.85) saturate(0.5);
+    --attribution-bg: rgba(10,12,15,0.7);
+    --mono: 'Share Tech Mono', monospace;
+    --sans: 'Barlow Condensed', sans-serif;
+  }
+
+  [data-theme="light"] {
+    --bg: #f1f5f9;
+    --surface: #ffffff;
+    --border: #cbd5e1;
+    --accent: #dc2626;
+    --accent-hover: #b91c1c;
+    --accent-bg: rgba(220,38,38,0.06);
+    --accent-border: rgba(220,38,38,0.2);
+    --accent-filter-bg: rgba(220,38,38,0.04);
+    --accent-filter-active: rgba(220,38,38,0.1);
+    --text: #1e293b;
+    --text-secondary: #475569;
+    --text-dim: #64748b;
+    --text-on-accent: #fff;
+    --btn-disabled-bg: #fde8e8;
+    --btn-disabled-border: #f8b4b4;
+    --btn-disabled-text: #c28080;
+    --item-hover: rgba(0,0,0,0.03);
+    --overlay-bg: rgba(0,0,0,0.45);
+    --modal-shadow: rgba(0,0,0,0.15);
+    --scrollbar-track: #f1f5f9;
+    --scrollbar-thumb: #cbd5e1;
+    --input-scheme: light;
+    --map-bg: #e8ecf1;
+    --tile-filter: brightness(1) saturate(1);
+    --attribution-bg: rgba(255,255,255,0.7);
     --mono: 'Share Tech Mono', monospace;
     --sans: 'Barlow Condensed', sans-serif;
   }
@@ -29,6 +78,7 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    transition: background 0.3s, color 0.3s;
   }
 
   header {
@@ -41,6 +91,7 @@
     flex-shrink: 0;
     z-index: 1000;
     flex-wrap: wrap;
+    transition: background 0.3s, border-color 0.3s;
   }
 
   .logo {
@@ -62,19 +113,22 @@
     justify-content: flex-end;
   }
 
-  #status-badge {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    color: var(--text-dim);
-    padding: 0 4px;
-    white-space: nowrap;
-    display: none;
-    flex: 1;
-    min-width: 100%;
-    order: 99;
+  #theme-toggle {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 1rem;
+    padding: 4px 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    line-height: 1;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  #status-badge.visible { display: block; }
+  #theme-toggle:hover { border-color: var(--accent); color: var(--text); }
 
   input[type="month"],
   input[type="text"] {
@@ -86,12 +140,11 @@
     padding: 6px 10px;
     border-radius: 3px;
     cursor: pointer;
-    transition: border-color 0.15s;
-    color-scheme: dark;
+    transition: border-color 0.15s, background 0.15s, color 0.15s;
+    color-scheme: var(--input-scheme);
   }
 
   input[type="text"] {
-    width: 110px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
@@ -124,23 +177,17 @@
     white-space: nowrap;
   }
 
-  button:hover:not(:disabled) { border-color: var(--accent); color: #fff; }
+  button:hover:not(:disabled) { border-color: var(--accent); color: var(--text); }
 
-  #locate-btn {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
+  .btn-accent {
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+    color: var(--text-on-accent) !important;
   }
 
-  #locate-btn:hover:not(:disabled) { background: #cc2020; border-color: #cc2020; }
-  #locate-btn:disabled { background: #2a1010; border-color: #3a1515; color: #664444; cursor: not-allowed; }
+  .btn-accent:hover:not(:disabled) { background: var(--accent-hover) !important; border-color: var(--accent-hover) !important; }
+  .btn-accent:disabled { background: var(--btn-disabled-bg) !important; border-color: var(--btn-disabled-border) !important; color: var(--btn-disabled-text) !important; cursor: not-allowed; }
 
-  #postcode-btn {
-    background: var(--bg);
-    border-color: var(--border);
-  }
-
-  /* Divider between location methods */
   .divider {
     font-family: var(--mono);
     font-size: 0.65rem;
@@ -148,36 +195,20 @@
     padding: 0 2px;
   }
 
-  /* Cached location pill */
-  #cached-loc {
-    display: none;
-    align-items: center;
-    gap: 6px;
-    background: rgba(255,59,59,0.08);
-    border: 1px solid rgba(255,59,59,0.25);
-    border-radius: 3px;
-    padding: 4px 10px;
+  #change-loc-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
     font-family: var(--mono);
     font-size: 0.72rem;
-    color: var(--text);
-  }
-
-  #cached-loc.visible { display: flex; }
-
-  #cached-loc .loc-label { color: var(--text-dim); margin-right: 2px; }
-
-  #clear-loc {
-    background: none;
-    border: none;
-    color: var(--text-dim);
-    font-size: 0.8rem;
-    padding: 0 2px;
+    padding: 5px 10px;
+    border-radius: 3px;
     cursor: pointer;
-    line-height: 1;
-    letter-spacing: 0;
+    transition: border-color 0.15s, color 0.15s;
+    letter-spacing: 0.04em;
   }
 
-  #clear-loc:hover { color: var(--accent); }
+  #change-loc-btn:hover { border-color: var(--accent); color: var(--text); }
 
   #map { flex: 1; position: relative; z-index: 1; }
 
@@ -214,7 +245,7 @@
     flex-shrink: 0;
     max-height: 38vh;
     overflow-y: auto;
-    transition: max-height 0.3s ease;
+    transition: max-height 0.3s ease, background 0.3s, border-color 0.3s;
   }
 
   #panel.collapsed { max-height: 40px; overflow: hidden; }
@@ -230,12 +261,13 @@
     top: 0;
     background: var(--surface);
     z-index: 10;
+    transition: background 0.3s, border-color 0.3s;
   }
 
   .panel-title {
     font-family: var(--mono);
     font-size: 0.75rem;
-    color: var(--text-dim);
+    color: var(--text-secondary);
     letter-spacing: 0.1em;
   }
 
@@ -278,8 +310,8 @@
   }
 
   .stat-item:last-child { border-right: none; }
-  .stat-item:hover { background: rgba(255,59,59,0.06); }
-  .stat-item.active { background: rgba(255,59,59,0.1); }
+  .stat-item:hover { background: var(--accent-filter-bg); }
+  .stat-item.active { background: var(--accent-filter-active); }
 
   .stat-num {
     font-family: var(--mono);
@@ -310,7 +342,7 @@
     transition: background 0.1s;
   }
 
-  .crime-item:hover { background: rgba(255,255,255,0.02); }
+  .crime-item:hover { background: var(--item-hover); }
   .crime-item:last-child { border-bottom: none; }
 
   .crime-dot {
@@ -334,7 +366,7 @@
   .crime-meta {
     font-family: var(--mono);
     font-size: 0.68rem;
-    color: var(--text-dim);
+    color: var(--text-secondary);
     margin-top: 2px;
   }
 
@@ -368,15 +400,15 @@
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  .leaflet-container { background: #0d1117 !important; }
-  .leaflet-tile-pane { filter: brightness(0.85) saturate(0.5); }
+  .leaflet-container { background: var(--map-bg) !important; }
+  .leaflet-tile-pane { filter: var(--tile-filter); transition: filter 0.3s; }
 
   .leaflet-popup-content-wrapper {
     background: var(--surface) !important;
     border: 1px solid var(--border) !important;
     border-radius: 4px !important;
     color: var(--text) !important;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
+    box-shadow: 0 4px 20px var(--modal-shadow) !important;
   }
 
   .leaflet-popup-tip { background: var(--surface) !important; }
@@ -394,7 +426,7 @@
   .popup-row {
     font-family: var(--mono);
     font-size: 0.7rem;
-    color: var(--text-dim);
+    color: var(--text-secondary);
     margin-top: 2px;
   }
 
@@ -405,26 +437,28 @@
   }
 
   .leaflet-control-attribution {
-    background: rgba(10,12,15,0.7) !important;
+    background: var(--attribution-bg) !important;
     color: var(--text-dim) !important;
     font-size: 0.6rem !important;
   }
 
   #panel::-webkit-scrollbar { width: 4px; }
-  #panel::-webkit-scrollbar-track { background: var(--bg); }
-  #panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  #panel::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+  #panel::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 2px; }
 
-
+  /* ── WELCOME / LOCATION MODAL ──────────────────────────────────────────── */
   #welcome-backdrop {
     display: flex;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.75);
+    background: var(--overlay-bg);
     z-index: 3000;
     align-items: center;
     justify-content: center;
     padding: 20px;
   }
+
+  #welcome-backdrop.hidden { display: none; }
 
   #welcome-modal {
     background: var(--surface);
@@ -432,35 +466,181 @@
     border-top: 3px solid var(--accent);
     border-radius: 4px;
     padding: 32px 26px 22px;
-    max-width: 360px;
+    max-width: 380px;
     width: 100%;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+    box-shadow: 0 8px 40px var(--modal-shadow);
     animation: modal-in 0.25s ease;
   }
 
-  #modal-backdrop {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 2000;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+  .welcome-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
   }
 
-  #modal-backdrop.visible { display: flex; }
+  .welcome-x {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    letter-spacing: 0;
+    display: none;
+  }
 
-  #modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-top: 3px solid var(--accent);
-    border-radius: 4px;
-    padding: 28px 24px 20px;
-    max-width: 360px;
+  .welcome-x:hover { color: var(--text); }
+  .welcome-x.visible { display: block; }
+
+  .loc-input-group {
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .loc-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .loc-row input[type="text"] {
+    flex: 1;
+    min-width: 0;
+    padding: 9px 12px;
+    font-size: 0.85rem;
+  }
+
+  .loc-row #postcode-btn {
+    padding: 9px 16px;
+    font-size: 0.82rem;
+  }
+
+  .loc-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 2px 0;
+  }
+
+  .loc-divider::before,
+  .loc-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .loc-divider span {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  #locate-btn {
     width: 100%;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
-    animation: modal-in 0.2s ease;
+    padding: 10px 16px;
+    font-size: 0.85rem;
+  }
+
+  /* ── NO DATA TOOLTIP ──────────────────────────────────────────────────── */
+  #no-data-tooltip {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px);
+    right: -20px;
+    z-index: 2000;
+    width: 300px;
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    padding: 16px 18px;
+    box-shadow: 0 8px 30px var(--modal-shadow);
+    animation: tooltip-in 0.25s ease;
+  }
+
+  #no-data-tooltip.visible { display: block; }
+
+  #no-data-tooltip::before {
+    content: '';
+    position: absolute;
+    top: -7px;
+    right: 32px;
+    width: 12px;
+    height: 12px;
+    background: var(--surface);
+    border-left: 1px solid var(--accent);
+    border-top: 1px solid var(--accent);
+    transform: rotate(45deg);
+  }
+
+  @keyframes tooltip-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .tooltip-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .tooltip-title {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .tooltip-x {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    letter-spacing: 0;
+  }
+
+  .tooltip-x:hover { color: var(--text); }
+
+  .tooltip-body {
+    font-family: var(--sans);
+    font-size: 0.88rem;
+    color: var(--text);
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+
+  .tooltip-sub {
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .tooltip-highlight {
+    display: inline-block;
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    border-radius: 3px;
+    padding: 1px 6px;
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* pulse highlight on month input when tooltip shows */
+  #monthInput.highlight {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-bg);
+    transition: box-shadow 0.3s, border-color 0.3s;
   }
 
   @keyframes modal-in {
@@ -490,7 +670,7 @@
   .modal-sub {
     font-family: var(--mono);
     font-size: 0.7rem;
-    color: var(--text-dim);
+    color: var(--text-secondary);
     line-height: 1.6;
     margin-bottom: 20px;
   }
@@ -499,7 +679,7 @@
     background: var(--accent);
     border: none;
     border-radius: 3px;
-    color: #fff;
+    color: var(--text-on-accent);
     font-family: var(--sans);
     font-size: 0.8rem;
     font-weight: 700;
@@ -511,7 +691,7 @@
     transition: background 0.15s;
   }
 
-  .modal-close:hover { background: #cc2020; }
+  .modal-close:hover { background: var(--accent-hover); }
 </style>
 </head>
 <body>
@@ -519,26 +699,22 @@
 <header>
   <div class="logo">CRIME<span>MAP</span></div>
   <div class="controls">
-
-    <!-- Cached location pill — shown when location is saved -->
-    <div id="cached-loc">
-      <span class="loc-label">📍</span>
-      <span id="cached-label">—</span>
-      <button id="clear-loc" title="Clear saved location" onclick="clearLocation()">✕</button>
+    <div id="month-wrapper" style="position:relative">
+      <input type="month" id="monthInput" />
+      <!-- NO DATA TOOLTIP (points at month picker) -->
+      <div id="no-data-tooltip">
+        <div class="tooltip-header">
+          <span class="tooltip-title">// No Data</span>
+          <button class="tooltip-x" onclick="closeTooltip()">&#x2715;</button>
+        </div>
+        <div class="tooltip-body" id="tooltip-body">No crime records found for this area and date.</div>
+        <div class="tooltip-sub" id="tooltip-sub">Try selecting an earlier month &#x2191;</div>
+      </div>
     </div>
 
-    <input type="month" id="monthInput" />
+    <button id="change-loc-btn" onclick="openLocationModal()">&#x1F4CD; SET LOCATION</button>
 
-    <!-- Postcode fallback -->
-    <input type="text" id="postcodeInput" placeholder="Postcode" maxlength="8"
-           onkeydown="if(event.key==='Enter') lookupPostcode()" />
-    <button id="postcode-btn" onclick="lookupPostcode()">GO</button>
-
-    <span class="divider">or</span>
-
-    <button id="locate-btn" onclick="loadCrimesNearMe()">📍 Near Me</button>
-
-    <span id="status-badge"></span>
+    <button id="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">&#x1F319;</button>
   </div>
 </header>
 
@@ -552,38 +728,42 @@
   <div class="panel-header" onclick="togglePanel()">
     <span class="panel-title">// INCIDENT LOG</span>
     <div style="display:flex;align-items:center;gap:10px">
-      <span class="panel-count" id="panel-count">—</span>
-      <button class="toggle-btn" id="toggle-icon">▼</button>
+      <span class="panel-count" id="panel-count">&mdash;</span>
+      <button class="toggle-btn" id="toggle-icon">&#x25BC;</button>
     </div>
   </div>
   <div id="stats"></div>
   <div id="crime-list"></div>
 </div>
 
-
-
-<div id="welcome-backdrop" onclick="closeWelcome()">
+<!-- WELCOME / LOCATION MODAL -->
+<div id="welcome-backdrop">
   <div id="welcome-modal" onclick="event.stopPropagation()">
-    <div class="modal-icon">🚓</div>
+    <div class="welcome-top">
+      <div class="modal-icon">&#x1F693;</div>
+      <button class="welcome-x" id="welcome-x" onclick="closeWelcome()" title="Close">&#x2715;</button>
+    </div>
     <div class="modal-title">// CrimeMap UK</div>
-    <div class="modal-body">Use <span style="color:var(--accent)">📍 Near Me</span> to load crimes around your current location, or type a postcode and hit <span style="color:var(--accent)">GO</span>.</div>
-    <div class="modal-sub">Powered by the UK Police Data API · Location saved for this session</div>
-    <button class="modal-close" onclick="closeWelcome()">GET STARTED</button>
+    <div class="modal-body">Enter a postcode or use your current location to view nearby crime data.</div>
+    <div class="modal-sub">Powered by the UK Police Data API &middot; Crime data is published by the Home Office and typically lags <span style="color:var(--text)">2&ndash;3 months</span> behind the current date. The month picker defaults to the most recent period likely to have data.</div>
+
+    <div class="loc-input-group">
+      <div class="loc-row">
+        <input type="text" id="postcodeInput" placeholder="Enter postcode" maxlength="8"
+               onkeydown="if(event.key==='Enter') lookupPostcode()" />
+        <button id="postcode-btn" class="btn-accent" onclick="lookupPostcode()">GO</button>
+      </div>
+
+      <div class="loc-divider"><span>or</span></div>
+
+      <button id="locate-btn" class="btn-accent" onclick="loadCrimesNearMe()">&#x1F4CD; USE MY LOCATION</button>
+    </div>
   </div>
 </div>
-<div id="modal-backdrop" onclick="closeModal()">
-  <div id="modal" onclick="event.stopPropagation()">
-    <div class="modal-icon">📭</div>
-    <div class="modal-title">// No Data Found</div>
-    <div class="modal-body" id="modal-body"></div>
-    <div class="modal-sub" id="modal-sub"></div>
-    <button class="modal-close" onclick="closeModal()">DISMISS</button>
-  </div>
-</div>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
-// ── COLOURS ──────────────────────────────────────────────────────────────────
 const CAT_COLORS = {
   'anti-social-behaviour':  '#ff6b6b',
   'bicycle-theft':          '#ffa94d',
@@ -605,27 +785,63 @@ const CAT_COLORS = {
 function catColor(cat) { return CAT_COLORS[cat] || CAT_COLORS['default']; }
 function catLabel(cat) { return cat.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()); }
 
+// ── THEME ─────────────────────────────────────────────────────────────────────
+const THEME_KEY = 'crimemap_theme';
+let currentTheme = localStorage.getItem(THEME_KEY) || 'light';
+let darkTileLayer, lightTileLayer;
+
+function applyTheme(theme) {
+  currentTheme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('theme-toggle');
+  btn.textContent = theme === 'dark' ? '\u2600\uFE0F' : '\uD83C\uDF19';
+  localStorage.setItem(THEME_KEY, theme);
+  if (darkTileLayer && lightTileLayer) {
+    if (theme === 'dark') {
+      map.removeLayer(lightTileLayer);
+      map.addLayer(darkTileLayer);
+    } else {
+      map.removeLayer(darkTileLayer);
+      map.addLayer(lightTileLayer);
+    }
+  }
+}
+
+function toggleTheme() {
+  applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+}
+
 // ── MAP ───────────────────────────────────────────────────────────────────────
 const map = L.map('map', { center: [54.5, -3], zoom: 5 });
 
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-  attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
-  subdomains: 'abcd',
-  maxZoom: 19
-}).addTo(map);
+darkTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  attribution: '\u00a9 <a href="https://carto.com/">CARTO</a>',
+  subdomains: 'abcd', maxZoom: 19
+});
+
+lightTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '\u00a9 <a href="https://carto.com/">CARTO</a>',
+  subdomains: 'abcd', maxZoom: 19
+});
+
+(currentTheme === 'dark' ? darkTileLayer : lightTileLayer).addTo(map);
 
 const markers = L.layerGroup().addTo(map);
 let allCrimes = [];
 let activeFilter = null;
 let panelCollapsed = false;
 let userMarker = null;
+let hasSetLocation = false;
 
-// ── LOCATION CACHE (sessionStorage — cleared when tab closes) ─────────────────
+applyTheme(currentTheme);
+
+// ── LOCATION CACHE ────────────────────────────────────────────────────────────
 const CACHE_KEY = 'crimemap_location';
 
 function saveLocation(lat, lng, label) {
   sessionStorage.setItem(CACHE_KEY, JSON.stringify({ lat, lng, label }));
-  showCachedPill(label);
+  hasSetLocation = true;
+  updateChangeLocBtn();
 }
 
 function loadCachedLocation() {
@@ -635,115 +851,139 @@ function loadCachedLocation() {
 
 function clearLocation() {
   sessionStorage.removeItem(CACHE_KEY);
-  hideCachedPill();
   if (userMarker) { userMarker.remove(); userMarker = null; }
+  hasSetLocation = false;
+  updateChangeLocBtn();
   setBadge('Location cleared');
 }
 
-function showCachedPill(label) {
-  document.getElementById('cached-label').textContent = label;
-  document.getElementById('cached-loc').classList.add('visible');
+function updateChangeLocBtn() {
+  document.getElementById('change-loc-btn').innerHTML =
+    hasSetLocation ? '\uD83D\uDCCD CHANGE' : '\uD83D\uDCCD SET LOCATION';
 }
 
-function hideCachedPill() {
-  document.getElementById('cached-loc').classList.remove('visible');
+// ── WELCOME / LOCATION MODAL ──────────────────────────────────────────────────
+function openLocationModal() {
+  const bd = document.getElementById('welcome-backdrop');
+  bd.classList.remove('hidden');
+  bd.style.display = 'flex';
+  document.getElementById('welcome-x').classList.add('visible');
+  setTimeout(function() { document.getElementById('postcodeInput').focus(); }, 100);
+}
+
+function closeWelcome() {
+  var bd = document.getElementById('welcome-backdrop');
+  bd.classList.add('hidden');
+  bd.style.display = 'none';
 }
 
 // ── DEFAULT MONTH ─────────────────────────────────────────────────────────────
 (function () {
-  const d = new Date();
-  d.setMonth(d.getMonth() - 1);
-  document.getElementById('monthInput').value =
-    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  var d = new Date();
+  d.setMonth(d.getMonth() - 2);
+  var monthEl = document.getElementById('monthInput');
+  var val = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+  monthEl.value = val;
+  monthEl.max = val;
 
-  // Restore cached location pill on load
-  const cached = loadCachedLocation();
-  if (cached) showCachedPill(cached.label);
+  // Close tooltip when user changes the month
+  monthEl.addEventListener('change', function() { closeTooltip(); });
+
+  var cached = loadCachedLocation();
+  if (cached) {
+    hasSetLocation = true;
+    updateChangeLocBtn();
+    document.getElementById('welcome-x').classList.add('visible');
+  }
 })();
 
-// ── NEAR ME — uses cache if available, otherwise asks for permission ──────────
+// ── NEAR ME ───────────────────────────────────────────────────────────────────
 function loadCrimesNearMe() {
-  const month = document.getElementById('monthInput').value;
+  var month = document.getElementById('monthInput').value;
   if (!month) { setBadge('Select a month first'); return; }
 
-  // Use cached coords if we have them
-  const cached = loadCachedLocation();
+  var cached = loadCachedLocation();
   if (cached) {
-    setBadge(`Using saved location: ${cached.label}`);
+    closeWelcome();
+    setBadge('Using saved location: ' + cached.label);
     placeUserPin(cached.lat, cached.lng, cached.label);
     fetchCrimes(cached.lat, cached.lng, month);
     return;
   }
 
-  // First time — ask the browser
   if (!navigator.geolocation) {
-    setBadge('Geolocation not supported — try entering a postcode');
+    setBadge('Geolocation not supported \u2014 try entering a postcode');
     return;
   }
 
-  const btn = document.getElementById('locate-btn');
+  var btn = document.getElementById('locate-btn');
   btn.disabled = true;
   btn.textContent = 'LOCATING...';
   setBadge('Getting your location...');
   document.getElementById('locating-overlay').classList.add('active');
 
   navigator.geolocation.getCurrentPosition(
-    position => {
-      const { latitude: lat, longitude: lng } = position.coords;
+    function(position) {
+      var lat = position.coords.latitude;
+      var lng = position.coords.longitude;
       document.getElementById('locating-overlay').classList.remove('active');
       btn.disabled = false;
-      btn.textContent = '📍 Near Me';
+      btn.innerHTML = '\uD83D\uDCCD USE MY LOCATION';
 
       saveLocation(lat, lng, 'Your Location');
       placeUserPin(lat, lng, 'Your Location');
+      closeWelcome();
       fetchCrimes(lat, lng, month);
     },
-    () => {
+    function() {
       document.getElementById('locating-overlay').classList.remove('active');
       btn.disabled = false;
-      btn.textContent = '📍 Near Me';
-      setBadge('Location denied — try entering a postcode instead');
+      btn.innerHTML = '\uD83D\uDCCD USE MY LOCATION';
+      setBadge('Location denied \u2014 try entering a postcode instead');
     },
     { timeout: 10000 }
   );
 }
 
-// ── POSTCODE FALLBACK — uses postcodes.io (free, no key needed) ───────────────
+// ── POSTCODE ──────────────────────────────────────────────────────────────────
 async function lookupPostcode() {
-  const month = document.getElementById('monthInput').value;
+  var month = document.getElementById('monthInput').value;
   if (!month) { setBadge('Select a month first'); return; }
 
-  const raw = document.getElementById('postcodeInput').value.trim().replace(/\s+/g, '');
+  var raw = document.getElementById('postcodeInput').value.trim().replace(/\s+/g, '');
   if (!raw) {
     flashError('postcodeInput');
     setBadge('Enter a postcode first');
     return;
   }
 
-  const btn = document.getElementById('postcode-btn');
+  var btn = document.getElementById('postcode-btn');
   btn.disabled = true;
   btn.textContent = '...';
-  setBadge(`Looking up ${raw.toUpperCase()}...`);
+  setBadge('Looking up ' + raw.toUpperCase() + '...');
 
   try {
-    const res = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(raw)}`);
-    const json = await res.json();
+    var res = await fetch('https://api.postcodes.io/postcodes/' + encodeURIComponent(raw));
+    var json = await res.json();
 
     if (json.status !== 200 || !json.result) {
       flashError('postcodeInput');
-      setBadge(`Postcode "${raw.toUpperCase()}" not found`);
+      setBadge('Postcode "' + raw.toUpperCase() + '" not found');
       return;
     }
 
-    const { latitude: lat, longitude: lng, postcode } = json.result;
+    var lat = json.result.latitude;
+    var lng = json.result.longitude;
+    var postcode = json.result.postcode;
     saveLocation(lat, lng, postcode);
     placeUserPin(lat, lng, postcode);
+    closeWelcome();
     fetchCrimes(lat, lng, month);
     document.getElementById('postcodeInput').value = '';
 
   } catch (e) {
     flashError('postcodeInput');
-    setBadge('Postcode lookup failed — check your connection');
+    setBadge('Postcode lookup failed \u2014 check your connection');
   } finally {
     btn.disabled = false;
     btn.textContent = 'GO';
@@ -751,43 +991,45 @@ async function lookupPostcode() {
 }
 
 function flashError(id) {
-  const el = document.getElementById(id);
+  var el = document.getElementById(id);
   el.classList.remove('error');
-  void el.offsetWidth; // reflow to retrigger animation
+  void el.offsetWidth;
   el.classList.add('error');
-  setTimeout(() => el.classList.remove('error'), 400);
+  setTimeout(function() { el.classList.remove('error'); }, 400);
 }
 
 // ── USER PIN ──────────────────────────────────────────────────────────────────
 function placeUserPin(lat, lng, label) {
   if (userMarker) userMarker.remove();
+  var pinColor = currentTheme === 'dark' ? '#ffffff' : '#1e293b';
   userMarker = L.circleMarker([lat, lng], {
-    radius: 9, fillColor: '#ffffff', color: '#ff3b3b',
+    radius: 9, fillColor: pinColor, color: '#ff3b3b',
     weight: 2, fillOpacity: 1, zIndexOffset: 1000
-  }).addTo(map).bindPopup(`<div class="popup-cat">📍 ${label}</div>`);
+  }).addTo(map).bindPopup('<div class="popup-cat">\uD83D\uDCCD ' + label + '</div>');
 }
 
 // ── FETCH CRIMES ──────────────────────────────────────────────────────────────
 function fetchCrimes(lat, lng, month) {
-  const btn = document.getElementById('locate-btn');
+  var btn = document.getElementById('locate-btn');
   btn.disabled = true;
+  closeTooltip();
   setStatus('<span class="spinner"></span> Fetching crime data...');
   document.getElementById('stats').innerHTML = '';
-  document.getElementById('panel-count').textContent = '—';
+  document.getElementById('panel-count').textContent = '\u2014';
   markers.clearLayers();
   allCrimes = [];
   activeFilter = null;
 
   map.setView([lat, lng], 14);
 
-  fetch(`https://data.police.uk/api/crimes-street/all-crime?lat=${lat}&lng=${lng}&date=${month}`)
-    .then(res => {
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  fetch('https://data.police.uk/api/crimes-street/all-crime?lat=' + lat + '&lng=' + lng + '&date=' + month)
+    .then(function(res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
       return res.json();
     })
-    .then(data => {
+    .then(function(data) {
       allCrimes = data;
-      setBadge(`${data.length} incidents · ${month}`);
+      setBadge(data.length + ' incidents \u00B7 ' + month);
       if (!data.length) {
         setStatus('');
         document.getElementById('panel-count').textContent = '0';
@@ -796,12 +1038,12 @@ function fetchCrimes(lat, lng, month) {
         renderCrimes(data);
       }
     })
-    .catch(err => {
-      setStatus('⚠ Error fetching data. API may be unavailable or no data for this period.');
+    .catch(function(err) {
+      setStatus('\u26A0 Error fetching data. API may be unavailable or no data for this period.');
       setBadge('Error');
       console.error(err);
     })
-    .finally(() => {
+    .finally(function() {
       btn.disabled = false;
     });
 }
@@ -813,42 +1055,44 @@ function renderCrimes(crimes) {
 
   document.getElementById('panel-count').textContent = crimes.length.toLocaleString() + ' incidents';
 
-  const cats = {};
-  crimes.forEach(c => { cats[c.category] = (cats[c.category] || 0) + 1; });
-  const sorted = Object.entries(cats).sort((a, b) => b[1] - a[1]);
+  var cats = {};
+  crimes.forEach(function(c) { cats[c.category] = (cats[c.category] || 0) + 1; });
+  var sorted = Object.entries(cats).sort(function(a, b) { return b[1] - a[1]; });
 
-  const statsEl = document.getElementById('stats');
+  var statsEl = document.getElementById('stats');
   statsEl.innerHTML = '';
 
-  const allChip = makeChip(crimes.length, 'ALL', null, activeFilter === null);
-  allChip.onclick = () => { activeFilter = null; renderCrimes(allCrimes); };
+  var allChip = makeChip(crimes.length, 'ALL', null, activeFilter === null);
+  allChip.onclick = function() { activeFilter = null; renderCrimes(allCrimes); };
   statsEl.appendChild(allChip);
 
-  sorted.forEach(([cat, count]) => {
-    const label = catLabel(cat).replace('Crime', '').replace('Behaviour', 'Behav.').replace('Damage Arson', 'Damage').trim();
-    const chip = makeChip(count, label, catColor(cat), activeFilter === cat);
-    chip.onclick = () => { activeFilter = cat; renderCrimes(allCrimes.filter(c => c.category === cat)); };
+  sorted.forEach(function(entry) {
+    var cat = entry[0], count = entry[1];
+    var label = catLabel(cat).replace('Crime', '').replace('Behaviour', 'Behav.').replace('Damage Arson', 'Damage').trim();
+    var chip = makeChip(count, label, catColor(cat), activeFilter === cat);
+    chip.onclick = function() { activeFilter = cat; renderCrimes(allCrimes.filter(function(c) { return c.category === cat; })); };
     statsEl.appendChild(chip);
   });
 
-  crimes.forEach(crime => {
+  crimes.forEach(function(crime) {
     if (!crime.location) return;
-    const lat = parseFloat(crime.location.latitude);
-    const lng = parseFloat(crime.location.longitude);
+    var lat = parseFloat(crime.location.latitude);
+    var lng = parseFloat(crime.location.longitude);
     if (isNaN(lat) || isNaN(lng)) return;
 
-    const color = catColor(crime.category);
-    const outcome = crime.outcome_status?.category || 'Under investigation';
+    var color = catColor(crime.category);
+    var outcome = (crime.outcome_status && crime.outcome_status.category) || 'Under investigation';
 
     L.circleMarker([lat, lng], {
       radius: 5, fillColor: color, color: color, weight: 0, fillOpacity: 0.75
     })
-    .bindPopup(`
-      <div class="popup-cat">${catLabel(crime.category)}</div>
-      <div class="popup-row">📍 ${crime.location.street.name}</div>
-      <div class="popup-row">📅 ${crime.month}</div>
-      <div class="popup-row">🔎 ${outcome}</div>
-    `, { maxWidth: 220 })
+    .bindPopup(
+      '<div class="popup-cat">' + catLabel(crime.category) + '</div>' +
+      '<div class="popup-row">\uD83D\uDCCD ' + crime.location.street.name + '</div>' +
+      '<div class="popup-row">\uD83D\uDCC5 ' + crime.month + '</div>' +
+      '<div class="popup-row">\uD83D\uDD0E ' + outcome + '</div>',
+      { maxWidth: 220 }
+    )
     .addTo(markers);
   });
 
@@ -857,84 +1101,102 @@ function renderCrimes(crimes) {
 }
 
 function makeChip(count, label, color, isActive) {
-  const chip = document.createElement('div');
+  var chip = document.createElement('div');
   chip.className = 'stat-item' + (isActive ? ' active' : '');
-  if (color) chip.style.borderTop = `2px solid ${color}`;
-  chip.innerHTML = `
-    <span class="stat-num" style="${color ? 'color:' + color : ''}">${count}</span>
-    <span class="stat-label">${label}</span>
-  `;
+  if (color) chip.style.borderTop = '2px solid ' + color;
+  chip.innerHTML =
+    '<span class="stat-num" style="' + (color ? 'color:' + color : '') + '">' + count + '</span>' +
+    '<span class="stat-label">' + label + '</span>';
   return chip;
 }
 
 function renderList(crimes) {
-  const list = document.getElementById('crime-list');
+  var list = document.getElementById('crime-list');
   list.innerHTML = '';
 
-  crimes.slice(0, 100).forEach(crime => {
-    const color = catColor(crime.category);
-    const outcome = crime.outcome_status?.category || 'No outcome';
-    const div = document.createElement('div');
+  crimes.slice(0, 100).forEach(function(crime) {
+    var color = catColor(crime.category);
+    var outcome = (crime.outcome_status && crime.outcome_status.category) || 'No outcome';
+    var div = document.createElement('div');
     div.className = 'crime-item';
-    div.innerHTML = `
-      <div class="crime-dot" style="background:${color}"></div>
-      <div class="crime-info">
-        <div class="crime-cat">${catLabel(crime.category)}</div>
-        <div class="crime-meta">📍 ${crime.location?.street?.name || 'Unknown'} &nbsp;·&nbsp; ${crime.month}</div>
-        <div class="crime-outcome">${outcome}</div>
-      </div>
-    `;
+    var streetName = (crime.location && crime.location.street && crime.location.street.name) || 'Unknown';
+    div.innerHTML =
+      '<div class="crime-dot" style="background:' + color + '"></div>' +
+      '<div class="crime-info">' +
+        '<div class="crime-cat">' + catLabel(crime.category) + '</div>' +
+        '<div class="crime-meta">\uD83D\uDCCD ' + streetName + ' \u00B7 ' + crime.month + '</div>' +
+        '<div class="crime-outcome">' + outcome + '</div>' +
+      '</div>';
     if (crime.location) {
-      div.onclick = () => map.setView([
-        parseFloat(crime.location.latitude),
-        parseFloat(crime.location.longitude)
-      ], 17);
+      div.onclick = function() {
+        map.setView([parseFloat(crime.location.latitude), parseFloat(crime.location.longitude)], 17);
+      };
     }
     list.appendChild(div);
   });
 
   if (crimes.length > 100) {
-    const note = document.createElement('div');
+    var note = document.createElement('div');
     note.style.cssText = 'text-align:center;padding:12px;font-family:var(--mono);font-size:0.7rem;color:var(--text-dim)';
-    note.textContent = `+ ${(crimes.length - 100).toLocaleString()} more (all shown on map)`;
+    note.textContent = '+ ' + (crimes.length - 100).toLocaleString() + ' more (all shown on map)';
     list.appendChild(note);
   }
 }
 
 function setStatus(html) {
-  document.getElementById('crime-list').innerHTML = `<div id="status">${html}</div>`;
+  document.getElementById('crime-list').innerHTML = '<div id="status">' + html + '</div>';
 }
 
 function setBadge(text) {
-  const b = document.getElementById('status-badge');
-  b.textContent = text;
-  b.classList.add('visible');
+  // status badge removed — no-op
 }
 
 function togglePanel() {
   panelCollapsed = !panelCollapsed;
   document.getElementById('panel').classList.toggle('collapsed', panelCollapsed);
-  document.getElementById('toggle-icon').textContent = panelCollapsed ? '▲' : '▼';
+  document.getElementById('toggle-icon').textContent = panelCollapsed ? '\u25B2' : '\u25BC';
 }
 
-function closeWelcome() {
-  document.getElementById('welcome-backdrop').style.display = 'none';
-}
+var tooltipTimer = null;
 
 function showNoDataModal(month) {
-  const d = new Date(month + '-01');
-  const label = d.toLocaleString('en-GB', { month: 'long', year: 'numeric' });
-  document.getElementById('modal-body').textContent =
-    'No crime records were returned for this area.';
-  document.getElementById('modal-sub').innerHTML =
-    'This may be because data for <span style="color:var(--text)">' + label + '</span> has not yet been published by the Home Office. ' +
-    'The Police API typically lags 2–3 months behind. Try selecting an earlier month.';
-  document.getElementById('modal-backdrop').classList.add('visible');
+  var d = new Date(month + '-01');
+  var label = d.toLocaleString('en-GB', { month: 'long', year: 'numeric' });
+  document.getElementById('tooltip-body').textContent =
+    'No crime records found for ' + label + '.';
+  document.getElementById('tooltip-sub').innerHTML =
+    'Home Office data typically lags 2\u20133 months. Try an earlier month \u2191';
+
+  // Highlight the month input
+  document.getElementById('monthInput').classList.add('highlight');
+
+  // Show tooltip
+  var tip = document.getElementById('no-data-tooltip');
+  tip.classList.add('visible');
+
+  // Auto-dismiss after 8 seconds
+  if (tooltipTimer) clearTimeout(tooltipTimer);
+  tooltipTimer = setTimeout(function() { closeTooltip(); }, 8000);
+}
+
+function closeTooltip() {
+  document.getElementById('no-data-tooltip').classList.remove('visible');
+  document.getElementById('monthInput').classList.remove('highlight');
+  if (tooltipTimer) { clearTimeout(tooltipTimer); tooltipTimer = null; }
 }
 
 function closeModal() {
-  document.getElementById('modal-backdrop').classList.remove('visible');
+  closeTooltip();
 }
+
+// Close tooltip when clicking outside it
+document.addEventListener('click', function(e) {
+  var tip = document.getElementById('no-data-tooltip');
+  var wrapper = document.getElementById('month-wrapper');
+  if (tip.classList.contains('visible') && !wrapper.contains(e.target)) {
+    closeTooltip();
+  }
+});
 </script>
 </body>
 </html>
